@@ -8,10 +8,11 @@ import java.util.Random;
 public class Snake extends JFrame {
 
     /* Some properties. */
-    private final int BOARD_WIDTH = 2 * 300; // Tile size * number of columns
-    private final int BOARD_HEIGHT = 2 * 300;
-    private final int TILE_SIZE = 5;
-    private final int ALL_TILES = 90000; // Total number of tiles
+	private final int TILE_SIZE = 20;
+	private final int colCount = 30; //Number of columns
+    private final int BOARD_WIDTH = TILE_SIZE * colCount; // Tile size * number of columns
+    private final int BOARD_HEIGHT = TILE_SIZE * colCount;
+    private final int ALL_TILES = colCount*colCount; // Total number of tiles
     private final int DELAY = 100;
 
     /* The coordinates of the snake. */
@@ -20,7 +21,7 @@ public class Snake extends JFrame {
 
     /* Coordinates for apple. */
     private int apple_x, apple_y;
-    private int[] apple = {apple_x, apple_y};
+    //private int[] apple = {apple_x, apple_y};
     
     /*Apple counter*/
     public int appleCount = 0;
@@ -136,11 +137,10 @@ public class Snake extends JFrame {
     private void spawnAppleCoor() {
        int r = (int) (Math.random() * Math.sqrt(ALL_TILES) - 1);
     	//int r = 50;
-        //Divide by 3 because TILE_SIZE is 5 but 2 in 2*300
-        apple_x = ((r * TILE_SIZE/3));
+        apple_x = ((r * TILE_SIZE));
 
         r = (int) (Math.random() * Math.sqrt(ALL_TILES) - 1);
-        apple_y = ((r * TILE_SIZE/3));
+        apple_y = ((r * TILE_SIZE));
     }
 
     /** Simply prints a gameOver-message to screen when called. */
