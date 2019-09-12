@@ -22,228 +22,93 @@ public class Snake extends JFrame {
     private static int[] yCoor = new int[ALL_TILES];
 
     /* Coordinates for apple. */
-    private int apple_x, apple_y;
+    private static int apple_x;
+	private static int apple_y;
 
     /* Pressed Key. */
     int pressedKey = KeyEvent.VK_DOWN;
-    int oldPressedKey;
-    private int snakeSize = 5;
+    private int snakeSize = 1;
     private boolean inGame = true;
-
+   
     
-    //Keep track of previous characters
-    static char previous;
-    
-    /*
-     * Knowing the possible action of the snake
-     * Determining the next movement of the snake
-     */
+    //Randomize directions
     public static char input(String percept) {
    
         SecureRandom num = new SecureRandom();
-        char character = percept.charAt(num.nextInt(4));
-        System.out.println(character);
-        return character;
+        char directions = percept.charAt(num.nextInt(4));
+        //System.out.println(directions);
+        return directions;
         
     }
     
-    /* 
-     * Base on next movement of snake 
-     * Establish some rules to make some decision
-     * and calculate the next best movement
-     */
-    public static int[] rules(char character) {
+   //Guide snake to food conditions
+    public static int[] rules(char directions) {
       	 
+    	//Stores xCoor and yCoor of snake
+    	int[] position = new int[2];
     	
-    	int[] movement = new int[2];
-    	//Randomize
-    	SecureRandom num = new SecureRandom();
+    	if(directions == 'l' && ((position[0] != apple_x) && (position[1] != apple_y))) {
+    		
+			if ((xCoor[0] - apple_x) < 0) {
+				
+					position[0] += TILE_SIZE;
+					position[1] = 0;
+    		}
+			else {
+				position[0] -= TILE_SIZE;
+				position[1] = 0;
+			}
+    	}
+    	else if(directions == 'r' && ((position[0] != apple_x) && (position[1] != apple_y))) {
+    		
+			if ((xCoor[0] - apple_x) < 0) {
+				position[0] += TILE_SIZE;
+				position[1] = 0;
+    		}
+			else {
+				position[0] -= TILE_SIZE;
+				position[1] = 0;
+			}
+    	}
+    	else if(directions == 'u' && ((position[0] != apple_x) && (position[1] != apple_y))) {
+    		
+			if ((yCoor[0] - apple_y) < 0) {
+				position[1] += TILE_SIZE;
+				position[0] = 0;
+    		}
+			else {
+				position[1] -= TILE_SIZE;
+				position[0] = 0;
+			}
+    	}
+        else if(directions == 'd' && ((position[0] != apple_x) && (position[1] != apple_y))) {
+    		
+        	if ((yCoor[0] - apple_y) < 0) {
+				position[1] += TILE_SIZE;
+				position[0] = 0;
+    		}
+			else {
+				position[1] -= TILE_SIZE;
+				position[0] = 0;
+			}
+    	}
     	
-    	/*
-         * if random variable generate s it will move to the left
-         * however if previous position was w, s will not be able
-         * to turn to w.
-        */
-    	if(character=='s' &&  yCoor[0] > BOARD_HEIGHT) {// Down
-        	String re = "ad";
-        	char char1 = re.charAt(num.nextInt(2));
-        	if(char1=='a'){
-        		///xCoor[0] -=  TILE_SIZE;
-        		movement[0]-=TILE_SIZE;
-        		movement[1]=0;
-        		previous=char1;
-        	}else if(char1=='d') {
-        		//xCoor[0] += TILE_SIZE;
-        		movement[0]=TILE_SIZE;
-        		movement[1]=0;
-        		previous=char1;
-        	}
-        }else if(character=='s') {
-        	if(previous=='w'){
-        		String re = "ad";
-	        	char char1 = re.charAt(num.nextInt(2));
-	        	if(char1=='a'){
-	        		//xCoor[0] -=  TILE_SIZE;
-	        		movement[0]-=TILE_SIZE;
-	        		movement[1]=0;
-	        		previous=char1;
-	        	}else if(char1=='d') {
-	        		//xCoor[0] += TILE_SIZE;
-	        		movement[0]=TILE_SIZE;
-	        		movement[1]=0;
-	        		previous=char1;
-	        	}
-        	}else {
-        		//yCoor[0] +=TILE_SIZE;
-        		movement[0]=0;
-        		movement[1]=TILE_SIZE;
-        		previous=character;
-        	}
-        	
-        }
         
-    	/*
-         * if random variable generate w it will move to the left
-         * however if previous position was s, w will not be able
-         * to turn to s.
-        */
-    	//Up
-        if(character=='w' &&  yCoor[0] < 0) {
-        	String re = "ad";
-        	char char1 = re.charAt(num.nextInt(2));
-        	if(char1=='a'){
-        		//xCoor[0] -=  TILE_SIZE;
-        		movement[0]-=TILE_SIZE;
-        		movement[1]=0;
-        		previous=char1;
-        	}else if(char1=='d') {
-        		//xCoor[0] += TILE_SIZE;
-        		movement[0]=TILE_SIZE;
-        		movement[1]=0;
-        		previous=char1;
-        	}
-        }else if(character=='w') {
-        	if(previous=='s'){
-        		String re = "ad";
-	        	char char1 = re.charAt(num.nextInt(2));
-	        	if(char1=='a'){
-	        		//xCoor[0] -=  TILE_SIZE;
-	        		movement[0]-=TILE_SIZE;
-	        		movement[1]=0;
-	        		previous=char1;
-	        	}else if(char1=='d') {
-	        		//xCoor[0] += TILE_SIZE;
-	        		movement[0]=TILE_SIZE;
-	        		movement[1]=0;
-	        		previous=char1;
-	        	}
-        	}else {
-        		//yCoor[0] -=TILE_SIZE;
-        		movement[0]=0;
-        		movement[1]=-TILE_SIZE;
-        		previous=character;
-        	}
-        }
-        
-        /*
-         * if random variable generate a it will move to the left
-         * however if previous position was d, a will not be able
-         * to turn to d.
-        */
-        //Left
-        if(character=='a' &&  xCoor[0] < 0) {
-        	String re = "ws";
-        	char char1 = re.charAt(num.nextInt(2));
-        	if(char1=='w'){
-        		//yCoor[0] -= TILE_SIZE;
-        		movement[0]=0;
-        		movement[1]-=TILE_SIZE;
-        		previous=char1;
-        	}else if(char1=='s') {
-        		//yCoor[0] +=TILE_SIZE;
-        		movement[0]=0;
-        		movement[1]=TILE_SIZE;
-        		previous=char1;
-        	}
-        }else if(character=='a') {
-        	if(previous=='d'){
-        		String re = "ws";
-	        	char char1 = re.charAt(num.nextInt(2));
-	        	if(char1=='w'){
-	        		//yCoor[0] -=TILE_SIZE;
-	        		movement[0]=0;
-	        		movement[1]-=TILE_SIZE;
-	        		previous=char1;
-	        	}else if(char1=='s') {
-	        		//yCoor[0] +=TILE_SIZE;
-	        		movement[0]=0;
-	        		movement[1]=TILE_SIZE;
-	        		previous=char1;
-	        	}
-        	}else {
-        		//xCoor[0] -=TILE_SIZE;
-        		movement[0]=-TILE_SIZE;
-        		movement[1]=0;
-        		previous=character;
-        	}
-        }
-        
-        /*if random variable generate d it will move to the right
-         * however if previous position was a, d will not be able
-         * to turn to a.
-         */
-        //Right
-        if(character=='d' &&  xCoor[0] > BOARD_WIDTH) {
-        	String re = "ws";
-        	char char1 = re.charAt(num.nextInt(2));
-        	if(char1=='w'){
-        		//yCoor[0] -= TILE_SIZE;
-        		movement[0]=0;
-        		movement[1]-=TILE_SIZE;
-        		previous=char1;
-        	}else if(char1=='s') {
-        		//yCoor[0] +=TILE_SIZE;
-        		movement[0]=0;
-        		movement[1]=TILE_SIZE;
-        		previous=char1;
-        	}
-        }else if(character=='d') {
-        	if(previous=='a'){
-        		String re = "ws";
-	        	char char1 = re.charAt(num.nextInt(2));
-	        	if(char1=='w'){
-	        		//yCoor[0] -=TILE_SIZE;
-	        		movement[0]=0;
-	        		movement[1]-=TILE_SIZE;
-	        		previous=char1;
-	        	}else if(char1=='s') {
-	        		//yCoor[0] +=TILE_SIZE;
-	        		movement[0]=0;
-	        		movement[1]=TILE_SIZE;
-	        		previous=char1;
-	        	}
-        	}else {
-        		//xCoor[0] +=TILE_SIZE;
-        		movement[0]=TILE_SIZE;
-        		movement[1]=0;
-        		previous=character;
-        	}	
-        }
-        
-        return movement;
+        return position;
     }
     
     //Actions
-    public static void action(int[] movement) {
+    public static void action(int[] move) {
 		
-		xCoor[0] += movement[0];
-		yCoor[0] += movement[1];
+		xCoor[0] += move[0];
+		yCoor[0] += move[1];
 	}
     
-    public static void simpleReflexAgent(String percept) {
+    //Agent function
+    public static void goalBasedAgent(String percept) {
     	
-    	char character = input(percept);
-    	int[] actions = rules(character); 
+    	char state = input(percept);
+    	int[] actions = rules(state); 
     	action(actions);
     }
 
@@ -252,11 +117,14 @@ public class Snake extends JFrame {
 	    public Board(){
 	        setBackground(Color.black);
 	
-	        // Set snake starting coordinates. 
-	        for(int i = 0; i < snakeSize; i++){
-	          yCoor[i] = 140 - (i * 30); 
-	          xCoor[i] = 140;
-	        }
+	        // Set snake starting coordinates.
+	        yCoor[0] = 140; 
+	        xCoor[0] = 140;
+//	        for(int i = 0; i < snakeSize; i++){
+//	          yCoor[i] = 140 - (i * 30); 
+//	          xCoor[i] = 140;
+//	        }
+	        
 	
 	        spawnAppleCoor();
 	    }
@@ -305,11 +173,31 @@ public class Snake extends JFrame {
 	   
 	    	/* Check for apples. */
 	    	if ((xCoor[0] == apple_x) && (yCoor[0] == apple_y)) {
-	    		scoreCount++;
-	      		if (scoreCount == 1) {
+	    		
 	      			inGame = false;
-	      	
-	      		}
+	      
+	    	}
+	    	
+	    	//Rebound against walls
+	    	//Right
+	    	 if ( xCoor[0] > BOARD_WIDTH) {
+	    		 //Rebound left
+	    		 pressedKey = KeyEvent.VK_LEFT;
+	    	 }
+	    	 //Left
+	    	 if ( xCoor[0] < 0) {
+	    		//Rebound right
+	    		 pressedKey = KeyEvent.VK_RIGHT;
+	    	 }
+	    	//Down
+	    	if (yCoor[0] > BOARD_HEIGHT) {
+	    		//Rebound up
+	    		pressedKey = KeyEvent.VK_UP;
+	    	}
+	    	//Top
+	    	if (yCoor[0] < 0 ) {
+	    		//Rebound down
+	    		pressedKey = KeyEvent.VK_DOWN;
 	    	}
 	      	
 	        
@@ -323,26 +211,28 @@ public class Snake extends JFrame {
 
 	         r = (int) (Math.random() * Math.sqrt(ALL_TILES) - 1);
 	         apple_y = ((r * TILE_SIZE));
+	         
+	         System.out.println(apple_x);
+	         System.out.println(apple_y);
 	     }
 
 	    
 		/** Simply prints a gameOver-message to screen when called. */
 		private void gameOver(Graphics g) {
 	    	g.setColor(Color.white);
-	    	g.setFont(new Font("Sans serif", Font.BOLD, 15));
-	    	g.drawString(("Game Over! You ate " + (getScore()) + " apple!"),
-	         	BOARD_WIDTH / 2, BOARD_HEIGHT / 2);
+	    	g.setFont(new Font("Sans serif", Font.BOLD, 18));
+	    	g.drawString(("Game Over! You ate the apple!"), BOARD_WIDTH / 2, BOARD_HEIGHT / 2);
 //	    	g.drawString("Press space to restart",
 //	         	BOARD_WIDTH / 2 + 10, BOARD_HEIGHT / 2 + 30);
 
 	    	/* Restart game if space is pressed. */
-	    	if (pressedKey == KeyEvent.VK_SPACE){
-	      	inGame = true;
-	      	pressedKey = KeyEvent.VK_DOWN;
-	      	setVisible(false);
-	      	dispose();
-	      	Snake s = new Snake();
-	    	}
+//	    	if (pressedKey == KeyEvent.VK_SPACE){
+//	      	inGame = true;
+//	      	pressedKey = KeyEvent.VK_DOWN;
+//	      	setVisible(false);
+//	      	dispose();
+//	      	Snake s = new Snake();
+//	    	}
 		}
 
 	    
@@ -354,11 +244,10 @@ public class Snake extends JFrame {
 	          yCoor[i] = yCoor[(i - 1)];
 	        }
 	
-	        String moves = "wsad";
-	        simpleReflexAgent(moves);
-	        
-	 
-	        
+	        //Up down left right 
+	        String moves = "udlr";
+	        goalBasedAgent(moves);
+	       
 	    }
 	    
 	    private String getScore(){
@@ -380,10 +269,5 @@ public class Snake extends JFrame {
 	Timer t = new Timer(DELAY, b);
 	t.start();
   }
-
-  @SuppressWarnings("unused")
-  public static void main (String[] args) {
-    Snake s = new Snake();
-  }    
   
 }
