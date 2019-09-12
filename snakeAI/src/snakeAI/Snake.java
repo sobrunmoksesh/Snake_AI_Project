@@ -29,7 +29,7 @@ public class Snake extends JFrame {
     int pressedKey = KeyEvent.VK_DOWN;
     private int snakeSize = 1;
     private boolean inGame = true;
-   
+    
     
     //Randomize directions
     public static char input(String percept) {
@@ -49,11 +49,13 @@ public class Snake extends JFrame {
     	
     	if(directions == 'l' && ((position[0] != apple_x) && (position[1] != apple_y))) {
     		
+    		//If x-coordinate of snake is less than x-coordinate of apple, add tile size till xCoor sums up to apple_x
 			if ((xCoor[0] - apple_x) < 0) {
 				
 					position[0] += TILE_SIZE;
 					position[1] = 0;
     		}
+			//If x-coordinate of snake is less than x-coordinate of apple, subtract tile size till xCoor equals to apple_x
 			else {
 				position[0] -= TILE_SIZE;
 				position[1] = 0;
@@ -72,10 +74,12 @@ public class Snake extends JFrame {
     	}
     	else if(directions == 'u' && ((position[0] != apple_x) && (position[1] != apple_y))) {
     		
+    		//If y-coordinate of snake is less than y-coordinate of apple, add tile size till yCoor sums up to apple_y
 			if ((yCoor[0] - apple_y) < 0) {
 				position[1] += TILE_SIZE;
 				position[0] = 0;
     		}
+			//If y-coordinate of snake is less than y-coordinate of apple, subtract tile size till xCoor equals to apple_y
 			else {
 				position[1] -= TILE_SIZE;
 				position[0] = 0;
@@ -111,6 +115,7 @@ public class Snake extends JFrame {
     	int[] actions = rules(state); 
     	action(actions);
     }
+    
 
     public class Board extends JPanel implements ActionListener {
 	    
