@@ -1,6 +1,5 @@
 package snakeAI;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.security.SecureRandom;
@@ -29,17 +28,18 @@ public class Snake extends JFrame {
     int pressedKey = KeyEvent.VK_DOWN;
     private int snakeSize = 1;
     private boolean inGame = true;
-    
+
     
     //Randomize directions
     public static char input(String percept) {
    
-        SecureRandom num = new SecureRandom();
-        char directions = percept.charAt(num.nextInt(4));
+        SecureRandom rand = new SecureRandom();
+        char directions = percept.charAt(rand.nextInt(4));
         //System.out.println(directions);
         return directions;
         
     }
+    
     
    //Guide snake to food conditions
     public static int[] rules(char directions) {
@@ -48,7 +48,7 @@ public class Snake extends JFrame {
     	int[] position = new int[2];
     	
     	if(directions == 'l' && ((position[0] != apple_x) && (position[1] != apple_y))) {
-    		
+  
     		//If x-coordinate of snake is less than x-coordinate of apple, add tile size till xCoor sums up to apple_x
 			if ((xCoor[0] - apple_x) < 0) {
 				
@@ -86,7 +86,7 @@ public class Snake extends JFrame {
 			}
     	}
         else if(directions == 'd' && ((position[0] != apple_x) && (position[1] != apple_y))) {
-    		
+
         	if ((yCoor[0] - apple_y) < 0) {
 				position[1] += TILE_SIZE;
 				position[0] = 0;
@@ -101,7 +101,7 @@ public class Snake extends JFrame {
         return position;
     }
     
-    //Actions
+    //Actions on xCoor and yCoor
     public static void action(int[] move) {
 		
 		xCoor[0] += move[0];
@@ -115,9 +115,9 @@ public class Snake extends JFrame {
     	int[] actions = rules(state); 
     	action(actions);
     }
-    
 
-    public class Board extends JPanel implements ActionListener {
+
+	public class Board extends JPanel implements ActionListener {
 	    
 	    public Board(){
 	        setBackground(Color.black);
@@ -226,7 +226,7 @@ public class Snake extends JFrame {
 		private void gameOver(Graphics g) {
 	    	g.setColor(Color.white);
 	    	g.setFont(new Font("Sans serif", Font.BOLD, 18));
-	    	g.drawString(("Game Over! You ate the apple!"), BOARD_WIDTH / 2, BOARD_HEIGHT / 2);
+	    	g.drawString(("Game Over! You ate the apple!"), BOARD_WIDTH / 4, BOARD_HEIGHT / 2);
 //	    	g.drawString("Press space to restart",
 //	         	BOARD_WIDTH / 2 + 10, BOARD_HEIGHT / 2 + 30);
 
@@ -244,25 +244,30 @@ public class Snake extends JFrame {
 	    private void moveSnakeCoor(){
 	
 	        /* Move coordinates up one in the matrix.*/
-	        for (int i = snakeSize; i > 0; i--) {
+	        for (int i = snakeSize; i >0; i--) {
 	          xCoor[i] = xCoor[(i - 1)];
 	          yCoor[i] = yCoor[(i - 1)];
 	        }
 	
 	        //Up down left right 
 	        String moves = "udlr";
+	        
+	        //All moves
 	        goalBasedAgent(moves);
+	            
 	       
 	    }
+	  
 	    
 	    private String getScore(){
 	    	return "" + scoreCount;
 		}
   }
 
-  public Snake(){
+   //Constructor
+   public Snake(){
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setSize(BOARD_WIDTH+200, BOARD_HEIGHT+200);
+	setSize(BOARD_WIDTH, BOARD_HEIGHT);
 	setResizable(false);
 	setLocation(50, 50);
 	
@@ -273,6 +278,6 @@ public class Snake extends JFrame {
 	
 	Timer t = new Timer(DELAY, b);
 	t.start();
-  }
+   }
   
 }
